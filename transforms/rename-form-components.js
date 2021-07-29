@@ -9,8 +9,6 @@
  */
 "use strict";
 
-const _ = require("lodash");
-
 /**
  * @type {import('jscodeshift').Transform}
  */

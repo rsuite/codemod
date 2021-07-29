@@ -35,15 +35,6 @@ module.exports = (file, api, options) => {
     })
     .at(0);
 
-  function importLegacyIcon(slug) {
-    const newIconName = slug.split("-").map(_.capitalize).join("");
-    const NewIcon = j.jsxIdentifier(`Legacy${newIconName}Icon`);
-    return j.importDeclaration(
-      [j.importDefaultSpecifier(NewIcon)],
-      j.stringLiteral(`@rsuite/icons/legacy/${newIconName}`)
-    );
-  }
-
   rsuiteImport
     .find(j.ImportSpecifier, {
       imported: {

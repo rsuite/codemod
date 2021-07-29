@@ -55,6 +55,8 @@ module.exports = (file, api, options) => {
 
       let notTransformed = 0;
 
+      const legacyIconSet = new Set();
+
       root
         .find(j.JSXOpeningElement, {
           name: {
@@ -65,14 +67,56 @@ module.exports = (file, api, options) => {
         .forEach((IconTag) => {
           const { attributes } = IconTag.value;
 
-          // fixme avoid duplications
           const iconAttributeValue = attributes.find(
             (attr) => attr.type === "JSXAttribute" && attr.name.name === "icon"
           );
 
+          /** @type {import('jscodeshift').JSXAttribute} */
+          const iconSizeAttributeValue = attributes.find(
+            (attr) => attr.type === "JSXAttribute" && attr.name.name === "size"
+          );
+
+          let fontSize;
+
+          if (iconSizeAttributeValue) {
+            const size = iconSizeAttributeValue.value.value;
+
+            fontSize = {
+              lg: "1.3333em",
+              "2x": "2em",
+              "3x": "3em",
+              "4x": "4em",
+              "5x": "5em",
+            }[size];
+          }
+
+          const newIconAttributes = attributes.filter(
+            (attr) =>
+              !(attr.type === "JSXAttribute" && attr.name.name === "icon") &&
+              !(attr.type === "JSXAttribute" && attr.name.name === "size")
+          );
+
+          if (fontSize) {
+            newIconAttributes.push(
+              j.jsxAttribute(
+                j.jsxIdentifier("style"),
+                j.jsxExpressionContainer(
+                  j.objectExpression([
+                    j.objectProperty(
+                      j.identifier("fontSize"),
+                      j.stringLiteral(fontSize)
+                    ),
+                  ])
+                )
+              )
+            );
+          }
+
           if (j.StringLiteral.check(iconAttributeValue.value)) {
             // transform <Icon>s whose `icon` prop is string literal
             const iconSlug = iconAttributeValue.value;
+
+            legacyIconSet.add(iconSlug.value);
 
             const newIconName = iconSlug.value
               .split("-")
@@ -80,22 +124,8 @@ module.exports = (file, api, options) => {
               .join("");
             const NewIcon = j.jsxIdentifier(`Legacy${newIconName}Icon`);
 
-            j(rsuiteImport.paths()[0]).insertAfter(
-              j.importDeclaration(
-                [j.importDefaultSpecifier(NewIcon)],
-                j.stringLiteral(`@rsuite/icons/legacy/${newIconName}`)
-              )
-            );
-
             j(IconTag).replaceWith(
-              j.jsxOpeningElement(
-                NewIcon,
-                attributes.filter(
-                  (attr) =>
-                    !(attr.type === "JSXAttribute" && attr.name.name === "icon")
-                ),
-                true
-              )
+              j.jsxOpeningElement(NewIcon, newIconAttributes, true)
             );
           } else if (
             // <Icon>s whose `icon` prop is Conditional (ternary) operator
@@ -115,12 +145,8 @@ module.exports = (file, api, options) => {
             const alternateIconSlug =
               iconAttributeValue.value.expression.alternate.value;
 
-            // import from rsuite
-            // import from consequent
-            // import from alternate
-            j(rsuiteImport.paths()[0])
-              .insertAfter(importLegacyIcon(alternateIconSlug))
-              .insertAfter(importLegacyIcon(consequentIconSlug));
+            legacyIconSet.add(consequentIconSlug);
+            legacyIconSet.add(alternateIconSlug);
 
             const IconElementPath = IconTag.parentPath;
 
@@ -143,13 +169,7 @@ module.exports = (file, api, options) => {
                           .map(_.capitalize)
                           .join("")}Icon`
                       ),
-                      attributes.filter(
-                        (attr) =>
-                          !(
-                            attr.type === "JSXAttribute" &&
-                            attr.name.name === "icon"
-                          )
-                      ),
+                      newIconAttributes,
                       true
                     )
                   ),
@@ -161,13 +181,7 @@ module.exports = (file, api, options) => {
                           .map(_.capitalize)
                           .join("")}Icon`
                       ),
-                      attributes.filter(
-                        (attr) =>
-                          !(
-                            attr.type === "JSXAttribute" &&
-                            attr.name.name === "icon"
-                          )
-                      ),
+                      newIconAttributes,
                       true
                     )
                   )
@@ -186,13 +200,7 @@ module.exports = (file, api, options) => {
                             .map(_.capitalize)
                             .join("")}Icon`
                         ),
-                        attributes.filter(
-                          (attr) =>
-                            !(
-                              attr.type === "JSXAttribute" &&
-                              attr.name.name === "icon"
-                            )
-                        ),
+                        newIconAttributes,
                         true
                       )
                     ),
@@ -204,13 +212,7 @@ module.exports = (file, api, options) => {
                             .map(_.capitalize)
                             .join("")}Icon`
                         ),
-                        attributes.filter(
-                          (attr) =>
-                            !(
-                              attr.type === "JSXAttribute" &&
-                              attr.name.name === "icon"
-                            )
-                        ),
+                        newIconAttributes,
                         true
                       )
                     )
@@ -222,6 +224,21 @@ module.exports = (file, api, options) => {
             notTransformed++;
           }
         });
+
+      for (const legacyIconSlug of Array.from(legacyIconSet).reverse()) {
+        const newIconName = legacyIconSlug
+          .split("-")
+          .map(_.capitalize)
+          .join("");
+        const NewIcon = j.jsxIdentifier(`Legacy${newIconName}Icon`);
+
+        j(rsuiteImport.paths()[0]).insertAfter(
+          j.importDeclaration(
+            [j.importDefaultSpecifier(NewIcon)],
+            j.stringLiteral(`@rsuite/icons/legacy/${newIconName}`)
+          )
+        );
+      }
 
       if (!notTransformed) {
         j(importIcon).remove();

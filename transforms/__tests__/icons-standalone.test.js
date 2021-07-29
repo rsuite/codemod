@@ -12,6 +12,13 @@ defineTest(
   __dirname,
   "icons-standalone",
   null,
+  "icons-standalone/legacy-icons-size-prop"
+);
+
+defineTest(
+  __dirname,
+  "icons-standalone",
+  null,
   "icons-standalone/legacy-icons-ternary"
 );
 defineTest(

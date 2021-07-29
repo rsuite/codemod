@@ -1,4 +1,4 @@
-## rsuite-codemod [![Build Status](https://travis-ci.org/reactjs/rsuite-codemod.svg)](https://travis-ci.org/reactjs/rsuite-codemod)
+## rsuite-codemod [![GitHub Actions](https://github.com/rsuite/codemod/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/rsuite/codemod/actions?query=branch%3Amaster+workflow%3A%22Node.js+CI%22)
 
 This repository contains a collection of codemod scripts for use with
 [JSCodeshift](https://github.com/facebook/jscodeshift) that help update React

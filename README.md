@@ -116,7 +116,7 @@ request.
 
 ### Credits
 
-rsuite-codemod has been constructed based on codebase from [rsuite-codemod](https://github.com/reactjs/rsuite-codemod) by Facebook.
+rsuite-codemod has been constructed based on codebase from [react-codemod](https://github.com/reactjs/react-codemod) by Facebook.
 
 ### License
 

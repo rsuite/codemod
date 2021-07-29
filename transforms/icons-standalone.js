@@ -98,6 +98,9 @@ module.exports = (file, api, options) => {
               )
             );
           } else if (
+            // <Icon>s whose `icon` prop is Conditional (ternary) operator
+            // and both paths are string literals
+            // <Icon icon={condition ? 'eye' : 'eye-closed'} />
             j.JSXExpressionContainer.check(iconAttributeValue.value) &&
             j.ConditionalExpression.check(
               iconAttributeValue.value.expression
@@ -107,28 +110,28 @@ module.exports = (file, api, options) => {
             ) &&
             j.StringLiteral.check(iconAttributeValue.value.expression.alternate)
           ) {
-            // <Icon>s whose `icon` prop is transform Conditional (ternary) operator
-            // and both paths are string literals
-            // <Icon icon={condition ? 'eye' : 'eye-closed'} />
             const consequentIconSlug =
               iconAttributeValue.value.expression.consequent.value;
             const alternateIconSlug =
               iconAttributeValue.value.expression.alternate.value;
 
+            // import from rsuite
+            // import from consequent
+            // import from alternate
             j(rsuiteImport.paths()[0])
-              .insertAfter(importLegacyIcon(consequentIconSlug))
-              .insertAfter(importLegacyIcon(alternateIconSlug));
-            const parentJSXExpressionContainer = j(IconTag)
-              .closest(j.JSXExpressionContainer)
-              .paths()[0];
-            if (
-              parentJSXExpressionContainer &&
-              j.JSXElement.check(
-                parentJSXExpressionContainer.value.expression
-              ) &&
-              parentJSXExpressionContainer.value.expression.openingElement ===
-                IconTag.value
-            ) {
+              .insertAfter(importLegacyIcon(alternateIconSlug))
+              .insertAfter(importLegacyIcon(consequentIconSlug));
+
+            const IconElementPath = IconTag.parentPath;
+
+            const isReturned = j.ReturnStatement.check(
+              IconElementPath.parentPath.value
+            );
+
+            const isInsideExpressionContainer = j.JSXExpressionContainer.check(
+              IconElementPath.parentPath.value
+            );
+            if (isReturned || isInsideExpressionContainer) {
               j(IconTag).replaceWith(
                 j.conditionalExpression(
                   iconAttributeValue.value.expression.test,
@@ -228,7 +231,9 @@ module.exports = (file, api, options) => {
   if (rsuiteImport.find(j.ImportSpecifier).size() < 1) {
     j(rsuiteImport.paths()[0]).remove();
   }
-  return root.toSource();
+  return root.toSource({
+    reuseWhitespace: false,
+  });
 };
 
 module.exports.parser = "tsx";

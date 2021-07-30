@@ -1,4 +1,7 @@
-## rsuite-codemod [![GitHub Actions](https://github.com/rsuite/codemod/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/rsuite/codemod/actions?query=branch%3Amaster+workflow%3A%22Node.js+CI%22)
+## rsuite-codemod
+
+[![GitHub Actions](https://github.com/rsuite/codemod/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/rsuite/codemod/actions?query=branch%3Amaster+workflow%3A%22Node.js+CI%22)
+[![codecov](https://codecov.io/gh/rsuite/codemod/branch/master/graph/badge.svg)](https://codecov.io/gh/rsuite/codemod)
 
 This repository contains a collection of codemod scripts for use with
 [JSCodeshift](https://github.com/facebook/jscodeshift) that help update React

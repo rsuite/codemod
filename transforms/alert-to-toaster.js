@@ -87,6 +87,7 @@ module.exports = (file, api, options) => {
                   j.jsxIdentifier("type"),
                   j.stringLiteral(alertType)
                 ),
+                j.jsxAttribute(j.jsxIdentifier("showIcon")),
                 j.jsxAttribute(j.jsxIdentifier("closable")),
               ]),
               j.jsxClosingElement(Message),

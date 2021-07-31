@@ -73,23 +73,33 @@ module.exports = (file, api, options) => {
         toasterImport.insertAfter(j.importSpecifier(Message));
       }
 
-      // replace Alert[type].(message) with toaster.push(<Message type=type description=message />)
+      // replace Alert[type].(message) with toaster.push(<Message type={type} showIcon closable>{message}</Message>)
       alertCalls.forEach((call) => {
         const alertType = call.value.callee.property.name;
 
         const alertMessage = call.value.arguments[0];
 
+        const alertDuration = call.value.arguments[1];
+
+        const messageAttributes = [
+          j.jsxAttribute(j.jsxIdentifier("type"), j.stringLiteral(alertType)),
+          j.jsxAttribute(j.jsxIdentifier("showIcon")),
+          j.jsxAttribute(j.jsxIdentifier("closable")),
+        ];
+
+        if (alertDuration) {
+          messageAttributes.push(
+            j.jsxAttribute(
+              j.jsxIdentifier("duration"),
+              j.jsxExpressionContainer(alertDuration)
+            )
+          );
+        }
+
         j(call).replaceWith(
           j.callExpression(j.memberExpression(toaster, j.identifier("push")), [
             j.jsxElement(
-              j.jsxOpeningElement(Message, [
-                j.jsxAttribute(
-                  j.jsxIdentifier("type"),
-                  j.stringLiteral(alertType)
-                ),
-                j.jsxAttribute(j.jsxIdentifier("showIcon")),
-                j.jsxAttribute(j.jsxIdentifier("closable")),
-              ]),
+              j.jsxOpeningElement(Message, messageAttributes),
               j.jsxClosingElement(Message),
               [
                 j.StringLiteral.check(alertMessage)

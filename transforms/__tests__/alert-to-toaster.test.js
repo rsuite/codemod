@@ -14,3 +14,10 @@ defineTest(
   null,
   "alert-to-toaster/alert-content-expression"
 );
+
+defineTest(
+  __dirname,
+  "alert-to-toaster",
+  null,
+  "alert-to-toaster/alert-duration"
+);

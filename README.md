@@ -29,7 +29,7 @@ Alert.info("description");
 
 // for rsutie v5
 toaster.push(
-  <Message type="info" closable>
+  <Message type="info" showIcon closable>
     description
   </Message>
 );

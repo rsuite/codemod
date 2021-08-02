@@ -1,6 +1,6 @@
 {
   "name": "rsuite-codemod",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "RSuite codemod scripts",
   "license": "MIT",
   "repository": "rsuite/codemod",
@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "prepublish": "npm run lint && npm run test",
     "jscodeshift": "jscodeshift",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "chalk": "^2.4.2",
@@ -43,7 +44,8 @@
     "eslint-plugin-react": "^7.16.0",
     "fbjs-scripts": "^0.7.1",
     "jest": "^24.9.0",
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "semantic-release": "^17.4.4"
   },
   "bin": {
     "rsuite-codemod": "./bin/rsuite-codemod.js"

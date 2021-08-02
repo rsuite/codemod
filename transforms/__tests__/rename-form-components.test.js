@@ -2,4 +2,10 @@
 
 const defineTest = require("jscodeshift/dist/testUtils").defineTest;
 
-defineTest(__dirname, "rename-form-components", null, "rename-form-components/rename-form-components");
+defineTest(__dirname, "rename-form-components", null, "no-rsuite-import");
+defineTest(
+  __dirname,
+  "rename-form-components",
+  null,
+  "rename-form-components/rename-form-components"
+);

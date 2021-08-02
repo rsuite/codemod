@@ -2,6 +2,7 @@
 
 const defineTest = require("jscodeshift/dist/testUtils").defineTest;
 
+defineTest(__dirname, "alert-to-toaster", null, "no-rsuite-import");
 defineTest(
   __dirname,
   "alert-to-toaster",

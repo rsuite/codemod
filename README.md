@@ -35,6 +35,30 @@ toaster.push(
 );
 ```
 
+#### `notification-to-toaster`
+
+Transform `Notification` calls to `toaster`
+
+https://rsuitejs.com/guide/v5-features/#refactor-notification
+
+```jsx
+// for rsuite v4
+Notification.info({
+  title: "info",
+  description: "description",
+  duration: 4500,
+  placement: "topStart",
+});
+
+// for rsuite v5
+toaster.push(
+  <Notification type="info" header="info" duration={4500} closable>
+    description
+  </Notification>,
+  { placement: "topStart" }
+);
+```
+
 #### `rename-form-components`
 
 https://next.rsuitejs.com/guide/v5-features/#2-6-rename-form-related-components

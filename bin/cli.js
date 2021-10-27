@@ -133,6 +133,10 @@ const TRANSFORMER_INQUIRER_CHOICES = [
     value: "alert-to-toaster",
   },
   {
+    name: "notification-to-toaster: Replace deprecated Notification imperative api with toaster api",
+    value: "notification-to-toaster",
+  },
+  {
     name: "rename-form-components: Rename Form related components",
     value: "rename-form-components",
   },

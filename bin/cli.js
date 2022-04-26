@@ -144,6 +144,10 @@ const TRANSFORMER_INQUIRER_CHOICES = [
     name: "componentclass-to-as: Rename `componentClass` prop to `as`",
     value: "componentclass-to-as",
   },
+  {
+    name: "show-to-open: Rename `show/hide` props to `open/close`",
+    value: "show-to-open",
+  },
 ];
 
 const PARSER_INQUIRER_CHOICES = [
